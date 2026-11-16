@@ -7,7 +7,7 @@ Die To-do-App ist der rote Faden durch das Modul M347 „Dienst mit Container an
 ```
 frontend/          statische Webseite (HTML, CSS, JS) und nginx.conf
 api/               ASP.NET Core Minimal API (.NET 10, C#)
-  packages/        lokaler NuGet-Feed (Npgsql)
+  packages/        lokaler NuGet-Feed (Npgsql, OpenAPI, Swagger UI)
   nuget.config     sagt dotnet restore, dass nur packages/ verwendet wird
 ```
 
@@ -31,8 +31,12 @@ Browser ──▶ frontend (nginx, Port 80) ──/api──▶ api (Port 8080) 
 | DELETE | `/api/todos/{id}` | – | 204; 404 |
 | GET | `/health` | – | 200 `{"status":"ok"}`; 503, wenn die DB nicht erreichbar ist |
 | GET | `/api/version` | – | 200 `{"version", "storage", "host"}` |
+| GET | `/api/swagger` | – | Swagger UI: alle Endpoints im Browser ansehen und ausprobieren |
+| GET | `/api/openapi/v1.json` | – | API-Beschreibung im OpenAPI-Format |
 
 Ein To-do sieht so aus: `{"id":1,"title":"Dockerfile schreiben","done":false}`
+
+Swagger UI erreichst du über das Frontend unter http://localhost:8080/api/swagger oder direkt an der API unter `/api/swagger`. Mit „Try it out“ kannst du Anfragen schicken, ohne curl zu verwenden.
 
 Ist die Datenbank nicht erreichbar, antwortet die API mit 503. Sie stürzt nicht ab und arbeitet weiter, sobald die DB wieder da ist.
 
@@ -51,7 +55,7 @@ Die Tabelle `todos` legt die API beim Start selbst an.
 ## Hinweise
 
 - **Kein .NET SDK nötig.** Gebaut wird im Container mit `mcr.microsoft.com/dotnet/sdk:10.0`.
-- **Offline-Restore:** `dotnet restore` holt Npgsql aus `api/packages/`, nicht aus dem Internet. Damit das im Container klappt, müssen `nuget.config` und `packages/` vor `dotnet restore` im Image sein.
+- **Offline-Restore:** `dotnet restore` holt alle NuGet-Pakete aus `api/packages/`, nicht aus dem Internet. Damit das im Container klappt, müssen `nuget.config` und `packages/` vor `dotnet restore` im Image sein.
 - **Frontend ohne API:** nginx startet auch, wenn es noch keinen Container `api` gibt. Die Seite zeigt dann „API nicht erreichbar“.
 - **Images:** Verwende fixe Tags, nie `latest`: `nginx:1.30.6-alpine`, `mcr.microsoft.com/dotnet/sdk:10.0`, `mcr.microsoft.com/dotnet/aspnet:10.0`, `postgres:17`.
 

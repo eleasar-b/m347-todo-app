@@ -15,8 +15,28 @@ ITodoStore store = string.IsNullOrWhiteSpace(connectionString)
     ? new InMemoryTodoStore()
     : new PostgresTodoStore(connectionString);
 
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Info.Title = "To-do-API";
+        document.Info.Version = version;
+        // Keine feste Server-Adresse: Swagger UI ruft die API über dieselbe Adresse wie die Seite auf
+        document.Servers?.Clear();
+        return Task.CompletedTask;
+    });
+});
+
 var app = builder.Build();
 app.Logger.LogInformation("To-do-API {Version}, Speicher: {Storage}", version, store.Name);
+
+// API-Beschreibung und Swagger UI unter /api, damit sie auch über nginx erreichbar sind
+app.MapOpenApi("/api/openapi/{documentName}.json");
+app.UseSwaggerUI(options =>
+{
+    options.RoutePrefix = "api/swagger";
+    options.SwaggerEndpoint("/api/openapi/v1.json", "To-do-API");
+});
 
 if (store is PostgresTodoStore postgres)
 {
