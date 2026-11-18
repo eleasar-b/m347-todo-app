@@ -7,8 +7,6 @@ Die To-do-App ist der rote Faden durch das Modul M347 „Dienst mit Container an
 ```
 frontend/          statische Webseite (HTML, CSS, JS) und nginx.conf
 api/               ASP.NET Core Minimal API (.NET 10, C#)
-  packages/        lokaler NuGet-Feed (Npgsql, OpenAPI, Swagger UI)
-  nuget.config     sagt dotnet restore, dass nur packages/ verwendet wird
 ```
 
 So spielen die Teile zusammen:
@@ -55,7 +53,7 @@ Die Tabelle `todos` legt die API beim Start selbst an.
 ## Hinweise
 
 - **Kein .NET SDK nötig.** Gebaut wird im Container mit `mcr.microsoft.com/dotnet/sdk:10.0`.
-- **Offline-Restore:** `dotnet restore` holt alle NuGet-Pakete aus `api/packages/`, nicht aus dem Internet. Damit das im Container klappt, müssen `nuget.config` und `packages/` vor `dotnet restore` im Image sein.
+- **NuGet-Pakete:** `dotnet restore` holt die Pakete (Npgsql, OpenAPI, Swagger UI) von nuget.org.
 - **Frontend ohne API:** nginx startet auch, wenn es noch keinen Container `api` gibt. Die Seite zeigt dann „API nicht erreichbar“.
 - **Images:** Verwende fixe Tags, nie `latest`: `nginx:1.30.6-alpine`, `mcr.microsoft.com/dotnet/sdk:10.0`, `mcr.microsoft.com/dotnet/aspnet:10.0`, `postgres:17`.
 
