@@ -64,8 +64,8 @@ Die Tabelle `todos` legt die API beim Start selbst an.
 | 2 | Dockerfile für das Frontend, Port-Mapping, Bind-Mount | D2B, D1B, D1I |
 | 3 | Dockerfile für die API, Image auf Docker Hub und in die lokale Registry pushen | C2B, D2I, D1I |
 | 4 | API-Dockerfile auf Multi-Stage umbauen, `.dockerignore` | D1A, B1B |
-| 5 | Frontend und API als Compose-Stack | B1I, D1I |
-| 6 | Stack mit PostgreSQL, Netzwerke, `.env`, Healthchecks | B1I, D1I, D1A, B2A |
-| 7 | Testkonzept für den Stack, Demo Kubernetes mit Version 1.0.0 → 1.1.0 | F1B, C1I, C2I, B1I |
+| 5 | Frontend und API von Hand über ein eigenes Netzwerk verbinden | D1I, B2A |
+| 6 | Stack mit Docker Compose: Frontend und API, PostgreSQL, Named Volume, Netzwerke, `.env` | B1I, D1I, D1A, B2A |
+| 7 | Healthchecks und Fehlersuche, Testkonzept für den Stack, Demo Kubernetes mit Version 1.0.0 → 1.1.0 | D1A, F1B, C1I, C2I, B1I |
 
-**Bezug zur LB:** In LB1 containerisierst du eine unbekannte App und publizierst sie lokal, genau wie in Block 3 und 4. In LB2 baust du einen Stack mit `compose.yaml` und testest ihn, wie in Block 5 bis 7.
+**Bezug zur LB:** In LB1 containerisierst du eine unbekannte App und publizierst sie lokal, genau wie in Block 3 und 4. In LB2 baust du einen Stack mit `compose.yaml` und testest ihn, wie in Block 6 und 7.
